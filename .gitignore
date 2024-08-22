@@ -1,0 +1,31 @@
+# Builds
+dist/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+.vscode
+
+# database
+servers.db
