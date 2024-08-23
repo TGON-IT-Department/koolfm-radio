@@ -1,7 +1,7 @@
-import { SapphireClient, SapphireClientOptions } from "@sapphire/framework";
+import { SapphireClient } from "@sapphire/framework";
 import { IntentArray, PartialArray } from "../variables/intentpartials";
 import config from '../../config.json'
-import { ActivityType, RoleFlagsBitField } from "discord.js";
+import { ActivityType } from "discord.js";
 
 export class RadioClient extends SapphireClient {
     public constructor() {
