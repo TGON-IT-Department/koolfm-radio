@@ -7,11 +7,11 @@ export class RadioCommand extends Command {
             ...options,
             name: 'radio',
             description:"",
-            fullCategory: ["info"]
+            fullCategory: ["radio"]
         })
     }
 
     public async messageRun(message: Message) {
-        return await message.channel.send(`${this.container.client.ws.ping} ms`)
+        
     }
 }
