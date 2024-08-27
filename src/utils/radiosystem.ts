@@ -1,10 +1,10 @@
 import { VoiceBasedChannel } from "discord.js";
-import { AudioPlayerStatus, AudioResource, VoiceConnection, NoSubscriberBehavior, joinVoiceChannel, createAudioResource, createAudioPlayer } from "@discordjs/voice";
+import { AudioPlayerStatus, AudioResource, VoiceConnection, NoSubscriberBehavior, joinVoiceChannel, createAudioResource, createAudioPlayer, getVoiceConnection } from "@discordjs/voice";
 
 export class RadioPlaybackSystem {
+    public RadioPlaybackSystem(){}
+    // Parameter values will be used to start the engine per server.
     public radioStart({ voiceChannel, guildId, stream, vol }: {voiceChannel: VoiceBasedChannel, guildId: string, stream: string, vol: number}) {
-        // Parameter values will be used to start the engine per server.
-
         let Error = false;
         joinRadio(voiceChannel).catch(e => {return console.log(e)})
     
@@ -79,7 +79,9 @@ export class RadioPlaybackSystem {
         }
     }
 
-    public radioStop(){
-        // Playback will stop on that said joined voice channel
+    // must instantiate a voice connection through message/interaction
+    public radioStop({ voiceCon }:  {voiceCon: string}){
+        const connection = getVoiceConnection(voiceCon);
+        connection?.destroy();
     }
 }

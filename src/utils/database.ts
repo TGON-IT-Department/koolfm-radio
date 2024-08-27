@@ -1,35 +1,112 @@
 import sqlite3 from "sqlite3";
-import { open } from 'sqlite'
+import { open } from "sqlite";
+import { User, UserMention, userMention } from "discord.js";
 
-// export async function openDb() {
-//     return open({
-//         filename: '../botdb.db',
-//         driver: sqlite3.Database
-//     }).then((db) => {
-//         console.log('The database is opened.')
-//     })
-// }
+export class RadioDatabase {
+  private db: any;
+  constructor() {
+    this.openDatabase();
+  }
 
-// all functions below are only reserved for SQL data entry, not works by discord.js
+  private openDatabase() {
+    open({
+      filename: "../botdb.db",
+      driver: sqlite3.Database,
+    })
+      .then((db) => {
+        this.db = db;
+        console.log("Database file opened.");
+      })
+      .catch((err) => {
+        console.error("Error opening database:", err);
+      });
+  }
 
-export async function addRadioStation(name: string, desc: string, stream: string, color: string){
-    // add radio station entry
-    // station name, desc, shoutcast stream, color code (string regex)
-    // for example: addRadioStation("SVC BINI Radio", "OT8", "rtmp.svciplay.com/bini.mp3", "#ee7cdb")
-}
+  public async addRadioStation(
+    name: string,
+    desc: string,
+    stream: string,
+    color: string
+  ) {
+    const query = `
+          INSERT INTO radio_stations (name, description, stream_url, color)
+          VALUES (?, ?, ?, ?)
+        `;
+    try {
+      await this.db.run(query, [name, desc, stream, color]);
+      console.log(`Radio station added: ${name}`);
+    } catch (err) {
+      console.error("Error adding radio station:", err);
+    }
+  }
 
-export async function removeRadioStation(name?: string, radiocode?: string){
-    // remove radio station entry; must be the exact name
-}
+  public async removeRadioStation(name?: string, radiocode?: string) {
+    const query = `
+          DELETE FROM radio_stations
+          WHERE name = ? OR radiocode = ?
+        `;
+    try {
+      await this.db.run(query, [name, radiocode]);
+      console.log(`Radio station removed: ${name || radiocode}`);
+    } catch (err) {
+      console.error("Error removing radio station:", err);
+    }
+  }
 
-export async function fetchRadioStation(name?: string, radiocode?: string){
-    // obtain online radio station details 
-}
+  public async fetchRadioStation(name?: string, radiocode?: string) {
+    const query = `
+          SELECT * FROM radio_stations
+          WHERE name = ? OR radiocode = ?
+        `;
+    try {
+      const row = await this.db.get(query, [name, radiocode]);
+      if (row) {
+        console.log(`Radio station found: ${row.name}`);
+        return row;
+      } else {
+        console.log(`Radio station not found: ${name || radiocode}`);
+        return null;
+      }
+    } catch (err) {
+      console.error("Error fetching radio station:", err);
+    }
+  }
 
-export async function addGuild(guildId: string | number, textId: string | number, voiceId: string | number) {
-    // adds server to database after discord.js interaction
-}
+  public async addGuild(
+    guildId: string | number,
+    textId: string | number,
+    voiceId: string | number
+  ) {
+    const query = `
+          INSERT INTO guilds (guild_id, text_channel_id, voice_channel_id)
+          VALUES (?, ?, ?)
+        `;
+    try {
+      await this.db.run(query, [guildId, textId, voiceId]);
+      console.log(`Guild added: ${guildId}`);
+    } catch (err) {
+      console.error("Error adding guild:", err);
+    }
+  }
 
-export async function removeGuild(guildid: string | number) {
-    // removes server from database after autodisconnect
+  public async removeGuild(guildId: string | number) {
+    const query = `
+          DELETE FROM guilds
+          WHERE guild_id = ?
+        `;
+    try {
+      await this.db.run(query, [guildId]);
+      console.log(`Guild removed: ${guildId}`);
+    } catch (err) {
+      console.error("Error removing guild:", err);
+    }
+  }
+
+  public async addOwner(userId: string, user?: User) {
+    //
+  }
+
+  public async removeOwner(userId: string, user?: User) {
+    //
+  }
 }
