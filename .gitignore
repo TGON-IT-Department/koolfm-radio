@@ -28,4 +28,5 @@ jspm_packages/
 .vscode
 
 # database
-servers.db
+botdb.sql
+botdb.db
