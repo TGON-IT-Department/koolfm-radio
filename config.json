@@ -3,5 +3,6 @@
     "voiceChannelId": "1275842522177863734",
     "stream": "https://stream.zeno.fm/t4is3umfojdtv.mp3",
     "prefix": "kf!",
+    "dbfile": "botdb.db",
     "volume": 100
 }
