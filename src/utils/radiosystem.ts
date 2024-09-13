@@ -1,10 +1,23 @@
+import { container } from "@sapphire/framework";
 import { VoiceBasedChannel } from "discord.js";
 import { AudioPlayerStatus, AudioResource, VoiceConnection, NoSubscriberBehavior, joinVoiceChannel, createAudioResource, createAudioPlayer, getVoiceConnection } from "@discordjs/voice";
+import { RadioDatabase } from "./database";
+const { client } = container;
 
 export class RadioPlaybackSystem {
-    public RadioPlaybackSystem(){}
     // Parameter values will be used to start the engine per server.
-    public radioStart({ voiceChannel, guildId, stream, vol }: {voiceChannel: VoiceBasedChannel, guildId: string, stream: string, vol: number}) {
+    private db: any = new RadioDatabase();
+    public async autoSystemStart() {
+        const guilds = await this.db.getAllGuilds();
+        await guilds.forEach(async (guild: any) => {
+            const guildId = guild.guild_id;
+            const voiceChannel = client.channels.cache.get(guild.voice_channel_id) as VoiceBasedChannel;
+            const stream = await this.db.getRadioStation("koolfm")
+            this.radioStart({ voiceChannel, guildId, stream: stream.stream_url })
+        })
+    }
+
+    public radioStart({ voiceChannel, guildId, stream }: {voiceChannel: VoiceBasedChannel, guildId: string, stream: string}) {
         let Error = false;
         joinRadio(voiceChannel).catch(e => {return console.log(e)})
     
@@ -17,13 +30,13 @@ export class RadioPlaybackSystem {
             const radio = createAudioResource(stream, {
                 inlineVolume: true
             })
-            player(radio, vc, vol)
+            player(radio, vc)
         }
     
-        async function player(audiostream: AudioResource, audioconnect: VoiceConnection, volume: number) {
+        async function player(audiostream: AudioResource, audioconnect: VoiceConnection) {
             try{
                 let player = createAudioPlayer({ behaviors: {noSubscriber: NoSubscriberBehavior.Play} });
-                audiostream.volume?.setVolume(volume/100);
+                audiostream.volume?.setVolume(100/100);
                 player.play(audiostream)
                 audioconnect.subscribe(player)
     
@@ -36,7 +49,6 @@ export class RadioPlaybackSystem {
                 player.on("error", async(e) => { await playerError() })
                 genError();
             } catch (e) { await genCatchError() }
-            console.log(Error)
             await genError();
         }
     

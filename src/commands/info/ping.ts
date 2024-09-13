@@ -12,7 +12,7 @@ export class PingCommand extends Command {
         })
     }
 
-    public async messageRun(message: Message) {
-        return await message.channel.send(`${this.container.client.ws.ping} ms`)
+    public override messageRun(message: Message) {
+        return message.reply(`${this.container.client.ws.ping} ms`)
     }
 }

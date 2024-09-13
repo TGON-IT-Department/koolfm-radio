@@ -12,7 +12,7 @@ export class TestCmd extends Command {
         })
     }
 
-    public async messageRun(message: Message) {
-        return await message.channel.send(`**SHEKI NAGBENTA NG PALAMIG SA TAPAT NG MNL48 THEATER**`)
+    public override messageRun(message: Message) {
+        return message.reply(`**SHEKI NAGBENTA NG PALAMIG SA TAPAT NG MNL48 THEATER**`)
     }
 }
